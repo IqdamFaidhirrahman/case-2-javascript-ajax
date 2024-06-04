@@ -1,33 +1,3 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit();
-}
-
-$currentUsername = $_SESSION['username'];
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['pesan'])) {
-    $pesan = $_POST['pesan'];
-    $username = $_SESSION['username'];
-
-    if (!empty(trim($pesan))) {
-        $chatFile = "chat.txt";
-        $newContent = $username . ": " . $pesan . ": " . time() . "\n";
-        file_put_contents($chatFile, $newContent, FILE_APPEND | LOCK_EX);
-    }
-}
-
-$chatContent = file_get_contents("chat.txt");
-$pesanArray = explode("\n", $chatContent);
-
-$pesanArray = array_filter($pesanArray, function ($pesan) {
-    return !empty(trim($pesan));
-});
-
-?>
-
 <?php include 'header.php' ?>
 <!DOCTYPE html>
 <html>
@@ -42,7 +12,7 @@ $pesanArray = array_filter($pesanArray, function ($pesan) {
             padding: 0;
             margin: 0;
         }
-
+        
         /* biar ga ngeblok warna pas ngetik */
         input:focus {
             outline: none;
@@ -164,13 +134,13 @@ $pesanArray = array_filter($pesanArray, function ($pesan) {
         </button>
         <div class="absolute container_card w-[370px] h-[550px] rounded-xl flex-col" id="cardChat" style="display: flex">
             <div class="pt-4 pb-2 px-6 header-card w-full flex items-center justify-between gap-6 rounded-t-xl bg-blue-500">
-                <div class="bg-blue-500 rounded-full h-[40px] w-[40px]">
-                </div>
+                <div class="bg-blue-500 rounded-full h-[40px] w-[40px]"> 
+            </div>
                 <div class="flex flex-col">
-                    <h2 class="font-bold text-base tracking-wide text-white text-center" style="font-size: 0.9em; margin-top: -5px;">ChatApp - Pemweb SI-E Kel 7</h2>
+                <h2 class="font-bold text-base tracking-wide text-white text-center" style="font-size: 0.9em; margin-top: -5px;">ChatApp - Pemweb SI-E Kel 7</h2>
                 </div>
 
-                <form action="logout.php" method="post">
+                <form action="logout" method="post">
                     <button type="submit" id="logoutButton" class="cursor-pointer">
                         <div class="sign">
                             <svg class="bg-transparent w-4" style="fill: #ffffff;" viewBox="0 0 512 512">
@@ -186,6 +156,7 @@ $pesanArray = array_filter($pesanArray, function ($pesan) {
 
             </div>
 
+
             <div class="custom-shape ">
             </div>
             <div class="bg-white w-full rounded-b-xl px-6 pb-4 flex flex-col">
@@ -196,7 +167,6 @@ $pesanArray = array_filter($pesanArray, function ($pesan) {
                     <div class="flex justify-between items-center mb-3">
                         <input id="messageInput" name="pesan" class="w-[260px] outline-none placeholder:text-xs placehplder:text-gray-300 placeholder:opacity-60 placeholder:tracking-wide text-sm text-gray-500 tracking-wide" type="text" placeholder="Masukkan Pesan ...">
                         <input type="hidden" id="currentUsername" value="<?php echo $_SESSION['username']; ?>">
-                        <input type="hidden" id="currentProfilePic" value="<?php echo $_SESSION['profile_picture'] ?? null; ?>">
 
                         <button type="submit" id="sendMessage">
                             <svg class="send-icon" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
@@ -214,7 +184,7 @@ $pesanArray = array_filter($pesanArray, function ($pesan) {
         </div>
         <?php include 'footer.php' ?>
     </section>
-
+    
     <script src="script.js"></script>
 
 </body>
